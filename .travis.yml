@@ -8,6 +8,13 @@ addons:
     packages:
       - docker-ce
 
+cache:
+  directories:
+  - docker_images
+
+before_cache:
+  - docker save -o docker_images/imgs.tar $(docker images -a -q)
+
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.24.1
@@ -17,6 +24,7 @@ env:
 before_install:
   - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
+  - docker load -i docker_images/imgs.tar || true
 
 install:
   - docker-compose -f rpmbuild/docker-compose.bintray.yml pull
