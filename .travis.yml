@@ -9,9 +9,10 @@ addons:
       - docker-ce
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.24.1
-  - BINTRAY_REPO=custom
-  - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-libtirpc
+  global:
+    - DOCKER_COMPOSE_VERSION=1.24.1
+    - BINTRAY_REPO=custom
+    - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-libtirpc
 
 before_install:
   - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
