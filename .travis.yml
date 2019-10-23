@@ -10,7 +10,24 @@ addons:
 
 env:
   - DOCKER_COMPOSE_VERSION=1.24.1
+  - BINTRAY_REPO=custom
+  - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-libtirpc
 
 before_install:
   - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
+
+install:
+  - docker-compose -f rpmbuild/docker-compose.bintray.yml pull
+
+jobs:
+  include:
+    - stage: build
+      name: "Build PHP Docker images"
+      script:
+        - docker-compose -f docker-compose.base.yml build
+        - docker-compose build --no-cache
+    - stage: rpm
+      name: "Build RPM packages"
+      script:
+        - docker-compose up
